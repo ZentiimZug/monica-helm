@@ -44,6 +44,17 @@ spec:
               volumeMounts:
                 {{- include "monica.volumeMounts" . | trim | nindent 16 }}
           restartPolicy: Never
+
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
           volumes:
             {{- include "monica.volumes" . | trim | nindent 12 }}
 {{- end }}
