@@ -21,19 +21,19 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
-      {{- with .Values.image.pullSecrets }}
-      imagePullSecrets:
-        {{- range . }}
-        - name: {{ . }}
-        {{- end }}
-      {{- end }}
       template:
         spec:
+          {{- with .Values.image.pullSecrets }}
+          imagePullSecrets:
+            {{- range . }}
+            - name: {{ . }}
+            {{- end }}
+          {{- end }}
           containers:
             - name: {{ .Chart.Name }}-cronjob
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
-              command: 
+              command:
                 - /bin/sh
                 - -c
                 - php /var/www/html/artisan schedule:run -v
