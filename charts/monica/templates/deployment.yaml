@@ -33,7 +33,7 @@ spec:
         {{- end }}
         {{- if .Values.memcached.enabled }}
         {{ template "monica.memcached.fullname" . }}-client: "true"
-        {{- end }}        
+        {{- end }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -41,7 +41,7 @@ spec:
         php-config-hash: {{ toJson .Values.monica.phpConfigs | sha256sum }}
         {{- if .Values.nginx.enabled }}
         nginx-config-hash: {{ print .Values.nginx.config.default "-" .Values.nginx.config.custom | sha256sum }}
-        {{- end }}      
+        {{- end }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -226,7 +226,7 @@ spec:
 
         {{- if .Values.mariadb.enabled }}
         - name: mariadb-isalive
-          image: {{ .Values.mariadb.image.registry | default "docker.io" }}/{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}
+          image: "{{ .Values.mariadb.image.registry | default "docker.io" }}/{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
           env:
             - name: MYSQL_USER
               valueFrom:
@@ -244,7 +244,7 @@ spec:
             - {{ printf "until mariadb --host=%s-mariadb --user=${MYSQL_USER} --password=${MYSQL_PASSWORD} --execute=\"SELECT 1;\"; do echo waiting for mysql; sleep 2; done;" .Release.Name }}
         {{- else if .Values.postgresql.enabled }}
         - name: postgresql-isready
-          image: {{ .Values.postgresql.image.registry | default "docker.io"  }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+          image: "{{ .Values.postgresql.image.registry | default "docker.io"  }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -252,7 +252,7 @@ spec:
                   name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
                   key: {{ .Values.externalDatabase.existingSecret.usernameKey | default "db-username" }}
             - name: POSTGRES_HOST
-              value: {{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}                  
+              value: {{ template "postgresql.v1.primary.fullname" .Subcharts.postgresql }}
           command:
             - "sh"
             - "-c"

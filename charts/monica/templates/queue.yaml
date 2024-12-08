@@ -52,14 +52,14 @@ spec:
             {{- if .postStartCommand }}
             postStart:
               exec:
-              command:
-                {{- toYaml . | nindent 18 }}
+                command:
+                  {{- toYaml . | nindent 18 }}
             {{- end }}
             {{- if .preStopCommand }}
             preStop:
               exec:
-              command:
-                {{- toYaml . | nindent 18 }}
+                command:
+                  {{- toYaml . | nindent 18 }}
             {{- end }}
           {{- end }}
           env:
