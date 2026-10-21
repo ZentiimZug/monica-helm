@@ -2,6 +2,11 @@ upstream php-handler {
     server 127.0.0.1:9000;
 }
 
+map $http_content_type $block_multipart {
+    default       0;
+    "~*multipart" 1;
+}
+
 server {
     listen {{ .Values.nginx.containerPort | default 80 }};
     listen [::]:{{ .Values.nginx.containerPort | default 80 }};
@@ -13,6 +18,10 @@ server {
     # removed from this list could take several months.
     #
     #add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload;" always;
+
+    if ($block_multipart) {
+        return 403;
+    }
 
     add_header Referrer-Policy "no-referrer" always;
     add_header X-Content-Type-Options "nosniff" always;
